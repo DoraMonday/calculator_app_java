@@ -1,0 +1,73 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Calculator {
+    private JFrame frame;
+    private JTextField textField;
+    private String currentInput = "";
+
+    public Calculator() {
+        frame = new JFrame("Calculator");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
+        frame.setLayout(new BorderLayout());
+
+        textField = new JTextField();
+        frame.add(textField, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 4));
+        frame.add(panel, BorderLayout.CENTER);
+
+        String[] buttons = {"7", "8", "9", "/",
+                             "4", "5", "6", "*",
+                             "1", "2", "3", "-",
+                             "0", ".", "=", "+"};
+
+        for (String text : buttons) {
+            JButton button = new JButton(text);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    handleButtonPress(text);
+                }
+            });
+            panel.add(button);
+        }
+
+        frame.setVisible(true);
+    }
+
+    private void handleButtonPress(String text) {
+        if (text.equals("=")) {
+            try {
+                currentInput = evaluate(currentInput);
+                textField.setText(currentInput);
+            } catch (Exception e) {
+                textField.setText("Error");
+            }
+        } else {
+            currentInput += text;
+            textField.setText(currentInput);
+        }
+    }
+
+    private String evaluate(String input) {
+        // Simple evaluation (can be improved)
+        // For the assignment, consider using something like eval or a custom parser
+        return String.valueOf(eval(input));
+    }
+
+    private double eval(String expression) {
+        // Simple eval using Java's ScriptEngine or use a proper parser
+        try {
+            return new ScriptEngineManager().getEngineByName("JavaScript").eval(expression);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public static void main(String[] args) {
+        new Calculator();
+    }
+}
